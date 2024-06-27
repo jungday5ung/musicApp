@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 페이지</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #FF3797;
+        }
+        .welcome-text {
+            text-align: center;
+            color: black;
+            font-size: 32px;
+            font-family: Roboto;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            height: 90%;
+            max-height: 700px;
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid black;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: auto;
+        }
+        .input-field {
+            width: 100%;
+            max-width: 500px;
+            height: 56px;
+            background: #EEEBEB;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-size: 18px;
+        }
+        .label-text {
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+            color: black;
+            font-size: 18px;
+            font-family: Roboto;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .button {
+            background: black;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-family: Roboto;
+            font-weight: 700;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+    <script>
+        function checkUserId() {
+            const userId = document.querySelector('input[name="id"]').value;
+            fetch('/main/checkUserId', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + userId
+            }).then(response => response.text())
+              .then(data => {
+                  const msg = data === 'exists' ? 'User ID already exists' : 'User ID is available';
+                  document.getElementById('userIdCheckResult').innerText = msg;
+              });
+        }
+
+        function checkUserEmail() {
+            const userEmail = document.querySelector('input[name="email"]').value;
+            fetch('/main/checkUserEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'email=' + userEmail
+            }).then(response => response.text())
+              .then(data => {
+                  const msg = data === 'exists' ? 'Email already exists' : 'Email is available';
+                  document.getElementById('userEmailCheckResult').innerText = msg;
+              });
+        }
+    </script>
+</head>
+<body>
+<div class="welcome-text">‘취향저격’ 에 오신걸 환영합니다!</div>
+<div class="container">
+    <form action="/main/save" method="post">
+        <div class="label-text">아이디</div>
+        <input type="text" class="input-field" placeholder="아이디" name="id">
+        <button type="button" class="button" onclick="checkUserId()">중복 확인</button>
+        <div id="userIdCheckResult" class="error"></div>
+        <div class="label-text">비밀번호</div>
+        <input type="password" class="input-field" placeholder="비밀번호" name="password">
+        <div class="label-text">비밀번호 확인</div>
+        <input type="password" class="input-field" placeholder="비밀번호 확인" name="password2">
+        <div class="label-text">이름</div>
+        <input type="text" class="input-field" placeholder="이름" name="name">
+        <div class="label-text">이메일</div>
+        <input type="email" class="input-field" placeholder="이메일" name="email">
+        <button type="button" class="button" onclick="checkUserEmail()">중복 확인</button>
+        <div id="userEmailCheckResult" class="error"></div>
+        <div class="label-text">전화번호</div>
+        <input type="tel" class="input-field" placeholder="전화번호" name="phoneNumber">
+        <button type="submit" class="button">회원가입 완료</button>
+    </form>
+</div>
+</body>
+</html>
