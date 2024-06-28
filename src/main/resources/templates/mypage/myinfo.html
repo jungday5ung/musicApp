@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FF3797;
+            flex-direction: column;
+        }
+        .container {
+            width: 1745px;
+            height: 877px;
+            margin: auto;
+            position: relative;
+        }
+        .navbar {
+            width: 1520px;
+            height: 64px;
+            position: absolute;
+            left: 80px;
+            top: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .user-info span {
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            word-wrap: break-word;
+        }
+        .user-info {
+            width: 140px;
+            height: 40px;
+            background: black;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 1490px;
+            top: 50px;
+        }
+        .navbar-item {
+            color: black;
+            font-size: 25px;
+            font-weight: 400;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        .navbar-item.bold {
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .main-title {
+            width: 787px;
+            position: absolute;
+            left: 479px;
+            top: 5px;
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            font-weight: 800;
+        }
+        .logout {
+            width: 69px;
+            height: 28px;
+            position: absolute;
+            left: 1557px;
+            top: 3px;
+            color: black;
+            font-size: 18px;
+            font-family: 'Anonymous Pro', monospace;
+            font-weight: 400;
+            cursor: pointer;
+        }
+        .content-container {
+            width: 90%;
+            max-width: 1000px;
+            height: 85%;
+            max-height: 700px;
+            background: #FFD146;
+            border-radius: 20px;
+            position: relative;
+            border: 1px solid black;
+            padding: 40px;
+            box-sizing: border-box;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            left: 350px;
+            top: 200px;
+        }
+        .form-field {
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-label {
+            flex: 1;
+            color: black;
+            font-size: 33px;
+            font-family: Inter, sans-serif;
+            font-weight: 700;
+            word-wrap: break-word;
+        }
+        .input-field {
+            flex: 2;
+            height: 50px;
+            padding: 0 20px;
+            background: #CCCCCC;
+            font-size: 22px;
+            font-family: Inter, sans-serif;
+            font-weight: 200;
+            word-wrap: break-word;
+            width: 70%;
+            border-radius: 5px;
+        }
+        .input-field[readonly] {
+            background: #E0E0E0;
+            color: #808080;
+        }
+        .action-button {
+            width: 192px;
+            height: 39px;
+            background: black;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .action-button-text {
+            color: white;
+            font-size: 24px;
+            font-family: Inter, sans-serif;
+            font-weight: 800;
+            word-wrap: break-word;
+        }
+        .section-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: black;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <script>
+        function logout() {
+            fetch('/main/logout', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+
+        function updatePassword() {
+            const password = document.querySelector('#password').value;
+            const passwordConfirm = document.querySelector('#passwordConfirm').value;
+
+            if (password !== passwordConfirm) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            fetch('/mypage/updatePassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    password: password
+                })
+            }).then(response => response.text())
+              .then(data => alert(data))
+              .catch(error => console.error('Error:', error));
+        }
+
+        function updatePhoneNumber() {
+            const phoneNumber = document.querySelector('#phoneNumber').value;
+
+            fetch('/mypage/updatePhoneNumber', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    phoneNumber: phoneNumber
+                })
+            }).then(response => response.text())
+              .then(data => alert(data))
+              .catch(error => console.error('Error:', error));
+        }
+
+         function updateComplete() {
+            updatePassword();
+            updatePhoneNumber();
+        }
+    </script>
+
+</head>
+<body>
+
+<div class="container">
+    <div class="navbar">
+        <div class="navbar-item ">HOME</div>
+        <div class="navbar-item">플레이 리스트</div>
+        <div class="navbar-item">오늘 뭐 듣지?</div>
+        <div class="navbar-item bold">마이페이지</div>
+        <div class="navbar-item">Link 4</div>
+    </div>
+
+    <div class="user-info">
+        <span th:text="${user.id} + ' 님'">user 님</span>
+    </div>
+
+    <div class="main-title">취 향 저 격</div>
+
+    <div class="logout" onclick="logout()">Logout</div>
+
+    <div class="content-container">
+        <div class="section-title">내 정보</div>
+        <div class="form-field">
+            <div class="input-label">아이디</div>
+            <input type="text" class="input-field" th:value="${user.id}" readonly>
+        </div>
+        <div class="form-field">
+            <div class="input-label">비밀번호</div>
+            <input type="password" id="password" class="input-field">
+        </div>
+
+        <div class="form-field">
+            <div class="input-label">비밀번호 확인</div>
+            <input type="password" id="passwordConfirm" class="input-field">
+        </div>
+
+        <div class="action-button" onclick="updatePassword()">
+            <div class="action-button-text">비밀번호 수정</div>
+        </div>
+
+        <div class="form-field">
+            <div class="input-label">이름</div>
+            <input type="text" class="input-field" th:value="${user.name}" readonly>
+        </div>
+        <div class="form-field">
+            <div class="input-label">이메일</div>
+            <input type="email" class="input-field" th:value="${user.email}" readonly>
+        </div>
+        <div class="form-field">
+            <div class="input-label">전화번호</div>
+            <input type="tel" id="phoneNumber" class="input-field" th:value="${user.phoneNumber}">
+        </div>
+        <div class="action-button" onclick="updatePhoneNumber()">
+            <div class="action-button-text">전화번호 수정</div>
+        </div>
+        <div class="action-button" style="bottom: 20px; left: 50%; transform: translateX(-50%); position: absolute;" onclick="updateComplete()">
+            <div class="action-button-text">수정 완료</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

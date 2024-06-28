@@ -57,5 +57,32 @@ public class UserService {
     // 여기까지 로그인
     // 여기까지 로그인
 
+    public void updatePassword(UserDTO userDTO) {
+        userMapper.updatePassword(userDTO);
+    }
+
+    public void updatePhoneNumber(UserDTO userDTO) {
+        userMapper.updatePhoneNumber(userDTO);
+    }
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+
+
+    // 비밀번호가 일치하는지 확인합니다.
+    public boolean checkPassword(String id, String rawPassword) {
+        String storedPassword = userMapper.getPasswordById(id);
+        return storedPassword != null && storedPassword.equals(rawPassword);
+    }
+
+    // 사용자를 삭제합니다.
+    public void deleteUser(String id) {
+        userMapper.deleteUserById(id);
+    }
+
+
 
 }

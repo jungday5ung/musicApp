@@ -8,16 +8,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 // 컨트롤러 어노테이션: 이 클래스가 Spring MVC의 컨트롤러임을 나타냅니다.
 @Controller
-@RequestMapping("/main") // 이 컨트롤러의 모든 요청은 "/main" 경로로 매핑됩니다.
+@RequestMapping("/") // 이 컨트롤러의 모든 요청은 "/main" 경로로 매핑됩니다.
 public class UserController {
 
     @Autowired // UserService 빈을 자동으로 주입합니다.
     private UserService userService;
 
     // GET 요청으로 "/register" 경로에 접근할 때 호출되는 메서드
-    @GetMapping("/register")
+    @GetMapping("/main/register")
     public String showRegisterPage() {
         return "main/register"; // "main/register.html" 뷰를 반환합니다.
     }
@@ -42,7 +44,7 @@ public class UserController {
 
     // POST 요청으로 "/register" 경로에 접근할 때 호출되는 메서드
     // 사용자 등록 처리를 합니다.
-    @PostMapping("/register")
+    @PostMapping("/main/register")
     public String register(@RequestParam(name = "id") String id,
                        @RequestParam(name = "password") String password,
                        @RequestParam(name = "password2") String password2,
@@ -86,7 +88,7 @@ public class UserController {
 
     // GET 요청으로 "/login" 경로에 접근할 때 호출되는 메서드
     // 로그인 페이지를 보여줍니다.
-    @GetMapping("/login")
+    @GetMapping("/main/login")
     public String showLoginPage() {
         return "main/login"; // "main/login.html" 페이지로 매핑
     }
@@ -99,7 +101,7 @@ public class UserController {
     // 여기까지는 회원가입
 
     //
-    @PostMapping("/login")
+    @PostMapping("/main/login")
     public String login(@RequestParam(name = "id") String id,
                         @RequestParam(name = "password") String password,
                         Model model, HttpSession session) {
@@ -113,13 +115,13 @@ public class UserController {
         }
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/main/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // 세션 무효화
         return "redirect:/main/login?logout=true"; // 로그아웃 후 로그인 페이지로 리다이렉트
     }
 
-    @GetMapping("/home")
+    @GetMapping("/main/home")
     public String showHomePage(HttpSession session, Model model) {
         UserDTO userDTO = (UserDTO) session.getAttribute("user");
         if (userDTO != null) {
@@ -135,6 +137,104 @@ public class UserController {
     // 여기까지 로그인
     // 여기까지 로그인
     // 여기까지 로그인
-    // 여기까지 로그인
+    // 여기까지 로그인, 로그아웃
+
+    @GetMapping("/mypage/mypage")
+    public String showMyPage(HttpSession session, Model model) {
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO != null) {
+            model.addAttribute("user", userDTO);
+        }
+        return "mypage/mypage"; // mypage.html 템플릿으로 매핑
+    }
+
+    // 여기까지 마이페이지 보여주기
+    // 여기까지 마이페이지 보여주기
+    // 여기까지 마이페이지 보여주기
+    // 여기까지 마이페이지 보여주기
+    // 여기까지 마이페이지 보여주기
+    // 여기까지 마이페이지 보여주기
+
+    @GetMapping("/mypage/myinfo")
+    public String showMyinfopage(HttpSession session, Model model) {
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO != null) {
+            model.addAttribute("user", userDTO);
+        }
+        return "mypage/myinfo"; // mypage.html 템플릿으로 매핑
+    }
+
+    // 여기까지 마이페이지/내정보 보여주기
+
+    @PostMapping("/mypage/updatePassword")
+    @ResponseBody
+    public String updatePassword(@RequestParam String password, HttpSession session) {
+        try {
+            UserDTO userDTO = (UserDTO) session.getAttribute("user");
+            if (userDTO != null) {
+                userDTO.setPassword(password);
+                userService.updatePassword(userDTO);
+                session.setAttribute("user", userDTO);
+                return "비밀번호가 성공적으로 업데이트되었습니다.";
+            }
+            return "사용자를 찾을 수 없습니다.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "비밀번호 업데이트 중 오류가 발생했습니다.";
+        }
+    }
+
+    @PostMapping("/mypage/updatePhoneNumber")
+    @ResponseBody
+    public String updatePhoneNumber(@RequestParam String phoneNumber, HttpSession session) {
+        try {
+            UserDTO userDTO = (UserDTO) session.getAttribute("user");
+            if (userDTO != null) {
+                userDTO.setPhoneNumber(phoneNumber);
+                userService.updatePhoneNumber(userDTO);
+                session.setAttribute("user", userDTO);
+                return "전화번호가 성공적으로 업데이트되었습니다.";
+            }
+            return "사용자를 찾을 수 없습니다.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "전화번호 업데이트 중 오류가 발생했습니다.";
+        }
+
+    }
+
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+
+    @GetMapping("/mypage/delete")
+    public String showDeletePage(HttpSession session, Model model) {
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO != null) {
+            model.addAttribute("user", userDTO);
+        }
+        return "mypage/delete"; // mypage.html 템플릿으로 매핑
+    }
+
+
+    @PostMapping("/mypage/delete")
+    @ResponseBody
+    public String deleteUser(@RequestBody Map<String, String> payload, HttpSession session) {
+        String password = payload.get("password");
+        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+        if (userDTO != null && userService.checkPassword(userDTO.getId(), password)) {
+            userService.deleteUser(userDTO.getId());
+            session.invalidate();
+            return "success";
+        }
+        return "fail";
+    }
+
+
+
+
 
 }

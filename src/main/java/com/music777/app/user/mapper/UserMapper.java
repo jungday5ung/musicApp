@@ -1,10 +1,7 @@
 package com.music777.app.user.mapper;
 
 import com.music777.app.user.dto.UserDTO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 // MyBatis 매퍼 인터페이스를 나타내는 애노테이션입니다.
 @Mapper
@@ -43,4 +40,30 @@ public interface UserMapper {
     // 여기까지 로그인
     // 여기까지 로그인
     // 여기까지 로그인
+
+    @Update("UPDATE USERS SET PASSWORD = #{password} WHERE ID = #{id}")
+    void updatePassword(UserDTO userDTO);
+
+    @Update("UPDATE USERS SET PHONE_NUMBER = #{phoneNumber} WHERE ID = #{id}")
+    void updatePhoneNumber(UserDTO userDTO);
+
+
+
+
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+    // 여기까지 내정보 수정
+
+    // 비밀번호를 확인하는 SQL 쿼리입니다.
+    @Select("SELECT PASSWORD FROM USERS WHERE ID = #{id}")
+    String getPasswordById(String id);
+
+    // 사용자를 삭제하는 SQL 쿼리입니다.
+    @Delete("DELETE FROM USERS WHERE ID = #{id}")
+    void deleteUserById(String id);
+
+
 }

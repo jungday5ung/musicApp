@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원탈퇴</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FF3797;
+            flex-direction: column;
+        }
+        .container {
+            width: 1440px;
+            height: 700px;
+            background: #FF3797;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .navbar {
+            width: 1520px;
+            height: 64px;
+            position: absolute;
+            left: 80px;
+            top: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .navbar-item {
+            color: black;
+            font-size: 25px;
+            font-weight: 400;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        .navbar-item.bold {
+            font-weight: 800;
+        }
+        .user-info {
+            width: 140px;
+            height: 40px;
+            background: black;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            font-family: Roboto;
+            font-weight: 800;
+            position: absolute;
+            right: 20px;
+        }
+        .main-title {
+            width: 787px;
+            position: absolute;
+            left: 479px;
+            top: 5px;
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            font-weight: 800;
+        }
+        .logout {
+            width: 69px;
+            height: 28px;
+            position: absolute;
+            left: 1557px;
+            top: 3px;
+            color: black;
+            font-size: 18px;
+            font-family: 'Anonymous Pro', monospace;
+            font-weight: 400;
+            cursor: pointer;
+        }
+        .content-container {
+            width: 774px;
+            height: 450px;
+            background: #FFD146;
+            border-radius: 15px;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            left: 10px;
+            top: 200px;
+
+        }
+        .section-title {
+            width: 283px;
+            color: white;
+            font-size: 22px;
+            font-family: Inter;
+            font-weight: 800;
+            text-align: center;
+            background: black;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .form-field {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .input-label {
+            color: black;
+            font-size: 38px;
+            font-family: Inter;
+            font-weight: 800;
+        }
+        .input-field {
+            width: 271px;
+            height: 50px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 35px;
+            font-size: 28px;
+            font-family: Inter;
+            font-weight: 400;
+        }
+        .action-button {
+            width: 230px;
+            height: 50px;
+            background: #DD0E0E;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+        .action-button-text {
+            color: white;
+            font-size: 24px;
+            font-family: Inter;
+            font-weight: 800;
+        }
+    </style>
+
+    <script>
+        function logout() {
+            fetch('/main/logout', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+
+        function deleteUser() {
+            const passwordElement = document.getElementById('password');
+            if (passwordElement) {
+                const password = passwordElement.value;
+                fetch('/mypage/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password: password })
+                }).then(response => response.text())
+                    .then(result => {
+                        if (result === 'success') {
+                            alert('회원탈퇴가 완료되었습니다.');
+                            window.location.href = '/main/login';
+                        } else {
+                            alert('비밀번호가 일치하지 않습니다.');
+                        }
+                    }).catch(error => console.error('Error:', error));
+            } else {
+                console.error('Password element not found.');
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="navbar">
+        <div class="navbar-item">HOME</div>
+        <div class="navbar-item">플레이 리스트</div>
+        <div class="navbar-item">오늘 뭐 듣지?</div>
+        <div class="navbar-item bold">마이페이지</div>
+        <div class="navbar-item">Link 4</div>
+    </div>
+
+    <div class="user-info">
+        <span th:text="${user.id} + ' 님'">user 님</span>
+    </div>
+
+    <div class="main-title">취 향 저 격</div>
+    <div class="logout" onclick="logout()">Logout</div>
+    <div class="content-container">
+        <div class="section-title">본인확인을 위해 아이디와 비밀번호를 입력해주세요.</div>
+        <div class="form-field">
+            <div class="input-label">아이디</div>
+            <input type="text" class="input-field" placeholder="ID" th:value="${user.id}" readonly>
+        </div>
+        <div class="form-field">
+            <div class="input-label">비밀번호</div>
+            <input type="password" class="input-field" placeholder="Password" id="password">
+        </div>
+        <div class="action-button" onclick="deleteUser()">
+            <div class="action-button-text">탈퇴 완료</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

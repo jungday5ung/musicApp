@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>mypage</title>
+  <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #FF3797;
+    }
+    .container {
+        width: 1745px;
+        height: 877px;
+        margin: auto;
+        position: relative;
+    }
+    .pink-background {
+        width: 1440px;
+        height: 700px;
+        position: absolute;
+        left: 153px;
+        top: 89px;
+        background: #FF3797;
+    }
+    .navbar {
+        width: 1520px;
+        height: 64px;
+        position: absolute;
+        left: 80px;
+        top: 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+    .navbar-item {
+        text-align: center;
+        color: black;
+        font-size: 25px;
+        word-wrap: break-word;
+        padding: 10px 20px;
+        background: white;
+        border-radius: 5px;
+        margin: 0 10px;
+    }
+    .navbar-item.bold {
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+    .user-info {
+        width: 140px;
+        height: 40px;
+        background: black;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        left: 1490px;
+        top: 50px;
+    }
+    .user-info span {
+        color: white;
+        font-size: 18px;
+        font-weight: 800;
+        word-wrap: break-word;
+    }
+    .main-title {
+        width: 787px;
+        position: absolute;
+        left: 479px;
+        top: 5px;
+        text-align: center;
+        color: black;
+        font-size: 70px;
+        font-weight: 800;
+    }
+    .logout {
+        width: 69px;
+        height: 28px;
+        position: absolute;
+        left: 1557px;
+        top: 3px;
+        color: black;
+        font-size: 18px;
+        font-family: 'Anonymous Pro', monospace;
+        font-weight: 400;
+        cursor: pointer;
+    }
+    .action-button {
+        padding: 14px 35px;
+        position: absolute;
+        background: #40E716;
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        cursor: pointer; /* 추가: 마우스 포인터를 손가락 모양으로 변경 */
+        text-decoration: none;
+    }
+    .action-button.first {
+        left: 734px;
+        top: 300px;
+    }
+    .action-button.second {
+        left: 734px;
+        top: 400px;
+    }
+    .action-button div {
+        color: black;
+        font-size: 36px;
+        font-family: Inter;
+        font-weight: 700;
+        word-wrap: break-word;
+    }
+  </style>
+
+  <script>
+    function logout() {
+        fetch('/main/logout', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        }).catch(error => console.error('Error:', error));
+    }
+  </script>
+
+</head>
+<body>
+
+<div class="container">
+  <div class="pink-background"></div>
+  <div class="navbar">
+    <div class="navbar-item ">HOME</div>
+    <div class="navbar-item">플레이 리스트</div>
+    <div class="navbar-item">오늘 뭐 듣지?</div>
+    <div class="navbar-item bold">마이페이지</div>
+    <div class="navbar-item">Link 4</div>
+  </div>
+
+  <div class="user-info">
+    <span th:text="${user.id} + ' 님'">user 님</span>
+  </div>
+
+  <div class="main-title">취향저격</div>
+  <div class="logout" onclick="logout()">Logout</div>
+  <a href="/mypage/myinfo" class="action-button first">
+    <div>1. 내  정 보</div>
+  </a>
+  <a href="/mypage/delete" class="action-button second">
+    <div>2. 회 원 탈 퇴</div>
+  </a>
+</div>
+
+</body>
+</html>
+

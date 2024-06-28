@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>플레이 리스트 홈</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FF3797;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 1745px;
+            height: 877px;
+            margin: auto;
+            position: relative;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 230px;
+            height: 70%;
+            background: #40E716;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            padding-top: 35px;
+            position: absolute;
+            left: 80px;
+            top: 220px;
+            bottom: 0;
+            border: 3px solid black;
+            border-radius: 10px;
+        }
+
+        .playlist {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .playlist-item {
+            width: 80%;
+            background: white;
+            border: 1px solid black;
+            border-radius: 5px;
+            margin: 5px 0;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .navbar {
+            width: 1520px;
+            height: 64px;
+            position: absolute;
+            left: 80px;
+            top: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .navbar-item {
+            color: black;
+            font-size: 25px;
+            font-weight: 400;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .navbar-item.bold {
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .user-info span {
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            word-wrap: break-word;
+        }
+
+        .user-info {
+            width: 140px;
+            height: 40px;
+            background: black;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 1490px;
+            top: 50px;
+        }
+
+        .logout {
+            width: 69px;
+            height: 28px;
+            position: absolute;
+            left: 1557px;
+            top: 3px;
+            color: black;
+            font-size: 18px;
+            font-family: 'Anonymous Pro', monospace;
+            font-weight: 400;
+        }
+
+        .main-title {
+            width: 787px;
+            position: absolute;
+            left: 479px;
+            top: 5px;
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: black;
+            margin: 10px 0;
+            position: absolute;
+            left: 95px;
+            top: 220px;
+        }
+
+        .list-container {
+            width: 1283px;
+            height: 628px;
+            background: white;
+            border-radius: 2px;
+            border: 1px solid rgba(0, 0, 0, 0.10);
+            margin: 20px auto;
+            padding: 20px;
+            box-sizing: border-box;
+            position: absolute;
+            left: 335px;
+            top: 218px;
+            border: 1px solid black;
+            border-radius: 20px;
+        }
+
+        .list-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: black;
+            text-align: center;
+        }
+
+        .list-description {
+            font-size: 20px;
+            font-weight: 500;
+            color: black;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn {
+            width: 150px;
+            height: 40px;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.10);
+            border-radius: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px auto;
+            font-size: 12px;
+            font-weight: 400;
+            color: black;
+            position: absolute;
+            left: 120px;
+            top: 780px;
+            cursor: pointer;
+            border: 5px solid black;
+        }
+
+        .btn .text {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar">
+        <div class="playlist"></div>
+        <!-- 추가적인 플레이리스트 아이템은 여기에 추가 가능 -->
+    </div>
+
+    <div class="navbar">
+        <div class="navbar-item">HOME</div>
+        <div class="navbar-item bold">플레이 리스트</div>
+        <div class="navbar-item">오늘 뭐 듣지?</div>
+        <div class="navbar-item ">마이페이지</div>
+        <div class="navbar-item">Link 4</div>
+    </div>
+
+    <div class="user-info">
+        <span>user 님</span>
+    </div>
+
+    <div class="main-title">취 향 저 격</div>
+    <div class="logout">Logout</div>
+    <div class="subtitle">플레이리스트 목록</div>
+    <div class="btn" id="create-playlist-btn">
+        <div class="text">플레이 리스트 만들기</div>
+    </div>
+    <div class="list-container">
+        <div class="list-title">플레이리스트</div>
+        <div class="list-description">리스트 쫘라락 -> 유튜브 링크로 걸어주기</div>
+    </div>
+</div>
+
+<script>
+    let playlistCount = 0;
+
+    document.getElementById('create-playlist-btn').addEventListener('click', function() {
+        playlistCount++;
+        const playlistDiv = document.createElement('div');
+        playlistDiv.classList.add('playlist-item');
+        playlistDiv.textContent = `플레이 리스트 ${playlistCount}`;
+        document.querySelector('.playlist').appendChild(playlistDiv);
+    });
+</script>
+</body>
+</html>
+
+
+
