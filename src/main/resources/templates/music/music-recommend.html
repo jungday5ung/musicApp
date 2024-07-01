@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>오늘 뭐 듣지?</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FF3797;
+            flex-direction: column;
+        }
+        .container {
+            width: 1745px;
+            height: 877px;
+            margin: auto;
+            position: relative;
+        }
+        .navbar {
+            width: 1520px;
+            height: 64px;
+            position: absolute;
+            left: 80px;
+            top: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .user-info span {
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            word-wrap: break-word;
+        }
+        .user-info {
+            width: 140px;
+            height: 40px;
+            background: black;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 1490px;
+            top: 50px;
+        }
+        .navbar-item {
+            color: black;
+            font-size: 25px;
+            font-weight: 400;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        .navbar-item.bold {
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .main-title {
+            width: 787px;
+            position: absolute;
+            left: 479px;
+            top: 5px;
+            text-align: center;
+            color: black;
+            font-size: 70px;
+            font-weight: 800;
+        }
+        .logout {
+            width: 69px;
+            height: 28px;
+            position: absolute;
+            left: 1557px;
+            top: 3px;
+            color: black;
+            font-size: 18px;
+            font-family: 'Anonymous Pro', monospace;
+            font-weight: 400;
+            cursor: pointer;
+        }
+        .list-container {
+            width: 1283px;
+            height: 628px;
+            background: white;
+            border-radius: 20px;
+            margin: 20px auto;
+            padding: 20px;
+            box-sizing: border-box;
+            position: absolute;
+            left: 335px;
+            top: 218px;
+            overflow-y: scroll;
+            border: 1px solid black;
+        }
+        .list-container h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        #musicForm {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #musicQuery {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #FF3797;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+            border: none;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script>
+        function logout() {
+            fetch('/main/logout', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('musicForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const query = document.getElementById('musicQuery').value;
+        try {
+            const response = await fetch(`/music/recommend?query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            console.log(data); // API 응답 데이터 확인
+
+            if (!Array.isArray(data)) {
+                throw new Error("응답이 배열 형태가 아닙니다.");
+            }
+
+            const musicList = document.getElementById('musicList');
+            musicList.innerHTML = '';
+
+            data.forEach(id => {
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.youtube.com/embed/${id}`;
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                iframe.allowFullscreen = true;
+                musicList.appendChild(iframe);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('음악 추천을 가져오는 중 오류가 발생했습니다.');
+        }
+    };
+});
+
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <div class="navbar">
+        <div class="navbar-item">
+            <a href="/main/home" style="text-decoration: none; color: black;">HOME</a>
+        </div>
+
+        <div class="navbar-item">
+            <a href="/playlist/playlist-home" style="text-decoration: none; color: black;">플레이 리스트</a>
+        </div>
+
+        <div class="navbar-item bold">
+            <a href="/music/music-recommend" style="text-decoration: none; color: black;">오늘 뭐 듣지?</a>
+        </div>
+
+        <div class="navbar-item">
+            <a href="/mypage/mypage" style="text-decoration: none; color: black;">마이페이지</a>
+        </div>
+
+        <div class="navbar-item">Link 4</div>
+    </div>
+
+    <div class="user-info">
+        <span th:text="${user.id} + ' 님'">user 님</span>
+    </div>
+
+    <div class="main-title">취 향 저 격</div>
+
+    <div class="logout" onclick="logout()">Logout</div>
+
+    <div class="list-container">
+        <h2>추천 음악 리스트</h2>
+        <form id="musicForm">
+            <input type="text" id="musicQuery" placeholder="듣고 싶은 스타일을 입력하세요" required>
+            <button type="submit">추천 받기</button>
+        </form>
+        <div id="musicList"></div>
+    </div>
+
+</div>
+
+</body>
+</html>

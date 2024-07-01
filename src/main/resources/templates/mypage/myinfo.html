@@ -59,10 +59,12 @@
             font-weight: 400;
             text-align: center;
             word-wrap: break-word;
+            cursor: pointer;
         }
         .navbar-item.bold {
             font-weight: 800;
             text-transform: uppercase;
+            cursor: pointer;
         }
         .main-title {
             width: 787px;
@@ -224,10 +226,22 @@
 
 <div class="container">
     <div class="navbar">
-        <div class="navbar-item ">HOME</div>
-        <div class="navbar-item">플레이 리스트</div>
-        <div class="navbar-item">오늘 뭐 듣지?</div>
-        <div class="navbar-item bold">마이페이지</div>
+
+        <div class="navbar-item ">
+            <a href="/main/home" style="text-decoration: none; color: black;">HOME</a>
+        </div>
+
+        <div class="navbar-item">
+            <a href="/playlist/playlist-home" style="text-decoration: none; color: black;">플레이 리스트</a>
+        </div>
+
+        <div class="navbar-item">
+            <a href="/music/music-recommend" style="text-decoration: none; color: black;">오늘 뭐 듣지?</a>
+        </div>
+
+        <div class="navbar-item bold">
+            <a href="/mypage/mypage" style="text-decoration: none; color: black;">마이페이지</a>
+        </div>
         <div class="navbar-item">Link 4</div>
     </div>
 

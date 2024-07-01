@@ -24,4 +24,11 @@ spring:
 
 
 
+#youtube video id 검색 api
+
+youtube:
+  data:
+    apikey: AIzaSyBI9ka_sH-dIaeBk8U2lniYmZZjlpLhwEg
+
+
 

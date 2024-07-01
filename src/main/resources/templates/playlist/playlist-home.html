@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>플레이 리스트 홈</title>
@@ -118,6 +118,7 @@
             font-size: 18px;
             font-family: 'Anonymous Pro', monospace;
             font-weight: 400;
+            cursor: pointer;
         }
 
         .main-title {
@@ -197,6 +198,22 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
+
+
+    <script>
+        function logout() {
+            fetch('/main/logout', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+    </script>
 </head>
 <body>
 <div class="container">
@@ -206,19 +223,31 @@
     </div>
 
     <div class="navbar">
-        <div class="navbar-item">HOME</div>
-        <div class="navbar-item bold">플레이 리스트</div>
-        <div class="navbar-item">오늘 뭐 듣지?</div>
-        <div class="navbar-item ">마이페이지</div>
+        <div class="navbar-item ">
+            <a href="/main/home" style="text-decoration: none; color: black;">HOME</a>
+        </div>
+
+        <div class="navbar-item bold">
+            <a href="/playlist/playlist-home" style="text-decoration: none; color: black;">플레이 리스트</a>
+        </div>
+
+        <div class="navbar-item">
+            <a href="/music/music-recommend" style="text-decoration: none; color: black;">오늘 뭐 듣지?</a>
+        </div>
+
+        <div class="navbar-item">
+            <a href="/mypage/mypage" style="text-decoration: none; color: black;">마이페이지</a>
+        </div>
+
         <div class="navbar-item">Link 4</div>
     </div>
 
     <div class="user-info">
-        <span>user 님</span>
+        <span th:text="${user.id} + ' 님'">user 님</span>
     </div>
 
     <div class="main-title">취 향 저 격</div>
-    <div class="logout">Logout</div>
+    <div class="logout" onclick="logout()">Logout</div>
     <div class="subtitle">플레이리스트 목록</div>
     <div class="btn" id="create-playlist-btn">
         <div class="text">플레이 리스트 만들기</div>

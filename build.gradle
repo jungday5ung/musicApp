@@ -42,6 +42,9 @@ dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-reflect' // Kotlin 의존성 추가
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk17' // Kotlin 의존성 추가
 
+	implementation 'org.json:json:20210307'
+
+
 
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 
