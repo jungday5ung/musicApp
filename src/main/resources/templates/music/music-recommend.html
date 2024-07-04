@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>오늘 뭐 듣지?</title>
@@ -58,10 +58,12 @@
             font-weight: 400;
             text-align: center;
             word-wrap: break-word;
+            cursor: pointer;
         }
         .navbar-item.bold {
             font-weight: 800;
             text-transform: uppercase;
+            cursor: pointer;
         }
         .main-title {
             width: 787px;
@@ -94,15 +96,17 @@
             padding: 20px;
             box-sizing: border-box;
             position: absolute;
-            left: 335px;
+            left: 230px;
             top: 218px;
             overflow-y: scroll;
-            border: 1px solid black;
+
         }
         .list-container h2 {
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 20px;
+            left: 3000px;
+
         }
         #musicForm {
             display: flex;
@@ -200,7 +204,9 @@
             <a href="/mypage/mypage" style="text-decoration: none; color: black;">마이페이지</a>
         </div>
 
-        <div class="navbar-item">Link 4</div>
+        <div class="navbar-item" th:if="${user.id == 'admin'}">
+            <a href="/admin/user-management" style="text-decoration: none; color: black;">회원관리</a>
+        </div>
     </div>
 
     <div class="user-info">

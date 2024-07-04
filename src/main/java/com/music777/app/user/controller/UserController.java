@@ -241,17 +241,14 @@ public class UserController {
     // 여기까지 마이페이지 구현 완료
     // 여기까지 마이페이지 구현 완료
 
-    @GetMapping("/playlist/playlist-home")
-    public String showPlaylistHomePage(HttpSession session, Model model) {
-        UserDTO userDTO = (UserDTO) session.getAttribute("user");
-        if (userDTO != null) {
-            model.addAttribute("user", userDTO);
-        }
-        return "playlist/playlist-home"; // playlist-home.html 템플릿으로 매핑
-    }
-
-
-
+//    @GetMapping("/playlist/playlist-home")
+//    public String showPlaylistHomePage(HttpSession session, Model model) {
+//        UserDTO userDTO = (UserDTO) session.getAttribute("user");
+//        if (userDTO != null) {
+//            model.addAttribute("user", userDTO);
+//        }
+//        return "playlist/playlist-home"; // playlist-home1.html 템플릿으로 매핑
+//    }
 
 
 }

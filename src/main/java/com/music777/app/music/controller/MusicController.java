@@ -40,7 +40,7 @@ public class MusicController {
     @ResponseBody
     public List<String> getRecommendations(@RequestParam String query) {
         List<String> recommendations = new ArrayList<>();
-        String apiKey = "AIzaSyBhv5IxbXj0T8Zoyg-jiMt57HLsA7xrCC0"; // API 키 입력
+        String apiKey = "AIzaSyBI9ka_sH-dIaeBk8U2lniYmZZjlpLhwEg"; // API 키 입력
         String apiUrl = "https://www.googleapis.com/youtube/v3/search";
 
         try {

@@ -1,8 +1,11 @@
 package com.music777.app.config;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.StringTypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -12,7 +15,7 @@ import javax.sql.DataSource;
 // 이 클래스는 MyBatis와 관련된 설정을 담당하는 설정 클래스입니다.
 @Configuration
 // MyBatis 매퍼 인터페이스가 위치한 패키지를 스캔하도록 지정합니다.
-@MapperScan(basePackages = "com.music777.app.user.mapper")
+@MapperScan(basePackages = {"com.music777.app.user.mapper", "com.music777.app.playlist.mapper"})
 public class MyBatisConfig {
 
     // SqlSessionFactory를 생성하는 Bean을 정의합니다.
@@ -31,5 +34,14 @@ public class MyBatisConfig {
     @Bean
     public DataSourceTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource); // 데이터 소스를 사용하여 트랜잭션 매니저를 생성하고 반환합니다.
+    }
+
+
+    //이렇게 하면 MyBatis가 null 값을 처리할 때 VARCHAR 타입으로 올바르게 처리할 수 있습니다.
+    @Bean
+    public ConfigurationCustomizer myBatisConfigurationCustomizer() {
+        return configuration -> {
+            configuration.getTypeHandlerRegistry().register(String.class, JdbcType.VARCHAR, new StringTypeHandler());
+        };
     }
 }

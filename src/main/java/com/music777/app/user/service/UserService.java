@@ -5,6 +5,8 @@ import com.music777.app.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 // 이 클래스는 사용자와 관련된 비즈니스 로직을 담당하는 서비스 클래스입니다.
 @Service
 public class UserService {
@@ -34,6 +36,16 @@ public class UserService {
 //        // 비밀번호 암호화
 //        String encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
 //        userDTO.setPassword(encryptedPassword);
+
+        // 기본 역할 설정
+        userDTO.setRole("user");
+        // 관리자 등록 시 역할 설정
+        if ("admin".equals(userDTO.getId())) {
+            userDTO.setRole("admin");
+        }
+
+        // 디버깅용 출력
+        System.out.println("Role 설정 확인: " + userDTO.getRole());
 
         // UserMapper를 사용하여 사용자 정보를 데이터베이스에 저장합니다.
         userMapper.register(userDTO);
@@ -85,4 +97,20 @@ public class UserService {
 
 
 
+    // 관리자
+    // 관리자 -> 회원조회
+    public UserDTO findUserById(String id) {
+        return userMapper.findUserById(id);
+    }
+
+    // 관리자 -> 회원전체 조회
+    public List<UserDTO> findAllUsers() {
+        return userMapper.findAllUsers();
+    }
+
+
+    // 관리자 -> 회원삭제
+    public void deleteUserById(int userNo) {
+        userMapper.deleteUserById2(userNo);
+    }
 }

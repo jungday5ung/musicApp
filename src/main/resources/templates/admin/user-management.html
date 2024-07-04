@@ -1,28 +1,34 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
-  <title>mypage</title>
+  <title>회원관리</title>
   <style>
-     body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #FF3797;
-            flex-direction: column;
-        }
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #FF3797;
+    }
     .container {
         width: 1745px;
         height: 877px;
         margin: auto;
         position: relative;
     }
-
+    .pink-background {
+        width: 1440px;
+        height: 700px;
+        position: absolute;
+        left: 153px;
+        top: 89px;
+        background: #FF3797;
+    }
     .navbar {
         width: 1520px;
         height: 64px;
@@ -37,18 +43,19 @@
         border-radius: 5px;
     }
     .navbar-item {
-            color: black;
-            font-size: 25px;
-            font-weight: 400;
-            text-align: center;
-            word-wrap: break-word;
-            cursor: pointer;
-        }
+        text-align: center;
+        color: black;
+        font-size: 25px;
+        word-wrap: break-word;
+        padding: 10px 20px;
+        background: white;
+        border-radius: 5px;
+        margin: 0 10px;
+    }
     .navbar-item.bold {
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
+        font-weight: 800;
+        text-transform: uppercase;
+    }
     .user-info {
         width: 140px;
         height: 40px;
@@ -150,11 +157,11 @@
       <a href="/music/music-recommend" style="text-decoration: none; color: black;">오늘 뭐 듣지?</a>
     </div>
 
-    <div class="navbar-item bold">
+    <div class="navbar-item ">
       <a href="/mypage/mypage" style="text-decoration: none; color: black;">마이페이지</a>
     </div>
 
-    <div class="navbar-item" th:if="${user.id == 'admin'}">
+    <div class="navbar-item bold" th:if="${user.id == 'admin'}">
       <a href="/admin/user-management" style="text-decoration: none; color: black;">회원관리</a>
     </div>
   </div>
@@ -163,13 +170,13 @@
     <span th:text="${user.id} + ' 님'">user 님</span>
   </div>
 
-  <div class="main-title">취 향 저 격</div>
+  <div class="main-title">취향저격</div>
   <div class="logout" onclick="logout()">Logout</div>
-  <a href="/mypage/myinfo" class="action-button first">
-    <div>1. 내  정 보</div>
+  <a href="/admin/search" class="action-button first">
+    <div>1. 회 원 조 회</div>
   </a>
-  <a href="/mypage/delete" class="action-button second">
-    <div>2. 회 원 탈 퇴</div>
+  <a href="/admin/allSearch" class="action-button second">
+    <div>2. 회 원 전 체 조 회</div>
   </a>
 </div>
 

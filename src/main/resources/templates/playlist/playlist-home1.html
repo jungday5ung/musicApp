@@ -81,13 +81,11 @@
             font-weight: 400;
             text-align: center;
             word-wrap: break-word;
-            cursor: pointer;
         }
 
         .navbar-item.bold {
             font-weight: 800;
             text-transform: uppercase;
-            cursor: pointer;
         }
 
         .user-info span {
@@ -159,7 +157,21 @@
             top: 218px;
             border: 1px solid black;
             border-radius: 20px;
-            overflow-y: auto;
+        }
+
+        .list-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: black;
+            text-align: center;
+        }
+
+        .list-description {
+            font-size: 20px;
+            font-weight: 500;
+            color: black;
+            text-align: center;
+            margin-top: 10px;
         }
 
         .btn {
@@ -185,55 +197,8 @@
         .btn .text {
             font-family: 'Inter', sans-serif;
         }
-
-        .chart-header {
-            display: flex;
-            align-items: center;
-            font-weight: bold;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-        }
-
-        .chart-header div {
-            flex: 1;
-            text-align: center;
-        }
-
-        .chart-item {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-        }
-
-        .chart-item div {
-            flex: 1;
-            text-align: center;
-        }
-
-        .chart-item img {
-            width: 50px;
-            height: 50px;
-            margin: 0 auto;
-        }
-
-        .rank, .title, .artist, .album {
-            font-size: 16px;
-        }
-
-        .rank, .title {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .checkbox-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
     </style>
+
 
     <script>
         function logout() {
@@ -248,72 +213,13 @@
                 }
             }).catch(error => console.error('Error:', error));
         }
-
-        function createPlaylist() {
-            const playlistTitle = document.getElementById('playlist-title').value;
-            if (!playlistTitle) {
-                alert('플레이리스트 이름을 입력해주세요.');
-                return;
-            }
-
-            const selectedSongs = [];
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-
-            checkboxes.forEach(checkbox => {
-                const chartItem = checkbox.closest('.chart-item');
-                const song = {
-                    rank: chartItem.querySelector('.rank').textContent,
-                    title: chartItem.querySelector('.title').textContent,
-                    artist: chartItem.querySelector('.artist').textContent,
-                    album: chartItem.querySelector('.album').textContent,
-                    imageUrl: chartItem.querySelector('img').src
-                };
-                selectedSongs.push(song);
-            });
-
-            const userNoElement = document.querySelector('.user-info');
-            const userNo = userNoElement ? userNoElement.getAttribute('data-userno') : null;
-
-            if (userNo === null) {
-                console.error('userNo를 가져오는 데 실패했습니다.');
-                return;
-            }
-
-            const playlist = {
-                playlistTitle: playlistTitle,
-                songs: selectedSongs,
-                userNo: parseInt(userNo) // userNo를 정수로 변환하여 전송
-            };
-
-            fetch('/playlist/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(playlist)
-            })
-            .then(response => response.json())
-            .then(savedPlaylist => {
-                console.log('Response:', savedPlaylist); // 응답 로그 출력
-                const playlistDiv = document.createElement('div');
-                playlistDiv.classList.add('playlist-item');
-                const songCount = savedPlaylist.songs ? savedPlaylist.songs.length : 0;
-                playlistDiv.textContent = `${savedPlaylist.playlistTitle} (곡 수: ${songCount})`;
-                document.querySelector('.sidebar .playlist').appendChild(playlistDiv);
-            })
-            .catch(error => console.error('Error:', error));
-        }
     </script>
 </head>
 <body>
 <div class="container">
     <div class="sidebar">
-        <div class="playlist">
-            <!-- 플레이리스트 항목이 여기에 동적으로 추가됩니다 -->
-            <div th:each="playlist : ${userPlaylists}" th:with="songCount=${playlist.songs != null ? playlist.songs.size() : 0}" class="playlist-item">
-                <span th:text="${playlist.playlistTitle + ' (곡 수: ' + songCount + ')'}"></span>
-            </div>
-        </div>
+        <div class="playlist"></div>
+        <!-- 추가적인 플레이리스트 아이템은 여기에 추가 가능 -->
     </div>
 
     <div class="navbar">
@@ -333,44 +239,38 @@
             <a href="/mypage/mypage" style="text-decoration: none; color: black;">마이페이지</a>
         </div>
 
-        <div class="navbar-item" th:if="${user.id == 'admin'}">
-            <a href="/admin/user-management" style="text-decoration: none; color: black;">회원관리</a>
-        </div>
+        <div class="navbar-item">Link 4</div>
     </div>
 
-    <div class="user-info" th:data-userno="${user.userNo}">
-        <span th:text="${user.id + ' 님'}">user 님</span>
+    <div class="user-info">
+        <span th:text="${user.id} + ' 님'">user 님</span>
     </div>
 
     <div class="main-title">취 향 저 격</div>
     <div class="logout" onclick="logout()">Logout</div>
     <div class="subtitle">플레이리스트 목록</div>
-
-    <div>
-        <input type="text" id="playlist-title" name="playlistTitle" placeholder="플레이리스트 이름을 입력하세요">
-        <button onclick="createPlaylist()">플레이리스트 저장</button>
+    <div class="btn" id="create-playlist-btn">
+        <div class="text">플레이 리스트 만들기</div>
     </div>
-
     <div class="list-container">
-        <div class="chart-header">
-            <div class="rank">순위</div>
-            <div class="image">앨범 이미지</div>
-            <div class="title">TITLE</div>
-            <div class="artist">ARTIST</div>
-            <div class="album">ALBUM</div>
-            <div class="checkbox-container">선택</div>
-        </div>
-
-        <div th:each="chart : ${melonChart}" class="chart-item">
-            <div class="rank" th:text="${chart.rank}"></div>
-            <div><img th:src="${chart.imageUrl}" alt="앨범 이미지"></div>
-            <div class="title" th:text="${chart.songTitle}"></div>
-            <div class="artist" th:text="${chart.artist}"></div>
-            <div class="album" th:text="${chart.album}"></div>
-            <div class="checkbox-container"><input type="checkbox"></div>
-        </div>
+        <div class="list-title">플레이리스트</div>
+        <div class="list-description">리스트 쫘라락 -> 유튜브 링크로 걸어주기</div>
     </div>
 </div>
 
+<script>
+    let playlistCount = 0;
+
+    document.getElementById('create-playlist-btn').addEventListener('click', function() {
+        playlistCount++;
+        const playlistDiv = document.createElement('div');
+        playlistDiv.classList.add('playlist-item');
+        playlistDiv.textContent = `플레이 리스트 ${playlistCount}`;
+        document.querySelector('.playlist').appendChild(playlistDiv);
+    });
+</script>
 </body>
 </html>
+
+
+

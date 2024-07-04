@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>내 정보</title>
+    <title>회원조회</title>
     <style>
         body, html {
             margin: 0;
@@ -138,28 +138,90 @@
             color: #808080;
         }
         .action-button {
-            width: 192px;
-            height: 39px;
-            background: black;
-            border-radius: 5px;
+            width: 250px;
+            height: 60px;
+            background: #4CAF50;
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 10px;
+            margin-bottom: 20px;
             cursor: pointer;
-        }
-        .action-button-text {
+            border: none;
             color: white;
             font-size: 24px;
             font-family: Inter, sans-serif;
             font-weight: 800;
             word-wrap: break-word;
         }
+        .action-button:hover {
+            background-color: #45A049;
+        }
         .section-title {
             font-size: 36px;
             font-weight: 800;
             color: black;
             margin-bottom: 20px;
+        }
+
+        .search-field {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            height: 50px;
+            width: 300px;
+            padding: 0 15px;
+            font-size: 20px;
+            border-radius: 5px;
+            border: 2px solid #333;
+            margin-right: 10px;
+        }
+        .search-button {
+            height: 50px;
+            width: 120px;
+            font-size: 20px;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background-color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 20px;
+        }
+        td {
+            font-size: 18px;
+        }
+        .delete-button {
+            background-color: #FF4747;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .delete-button:hover {
+            background-color: #FF1F1F;
         }
     </style>
 
@@ -177,48 +239,76 @@
             }).catch(error => console.error('Error:', error));
         }
 
-        function updatePassword() {
-            const password = document.querySelector('#password').value;
-            const passwordConfirm = document.querySelector('#passwordConfirm').value;
 
-            if (password !== passwordConfirm) {
-                alert('비밀번호가 일치하지 않습니다.');
-                return;
+
+        function getAllUsers() {
+            fetch(`/admin/getAllUsers`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }).then(response => response.json())
+              .then(data => {
+                  const userTable = document.querySelector('#userTable tbody');
+                  userTable.innerHTML = '';
+                  data.forEach(user => {
+                      const row = document.createElement('tr');
+                      row.innerHTML = `
+                          <td>${user.userNo}</td>
+                          <td>${user.id}</td>
+                          <td>${user.name}</td>
+                          <td>${user.email}</td>
+                          <td>${user.phoneNumber}</td>
+                          <td>${user.role}</td>
+                          <td>${user.createdAt}</td>
+                          <td><button onclick="deleteUser(${user.userNo})">삭제</button></td>
+
+                      `;
+                      userTable.appendChild(row);
+                  });
+              })
+              .catch(error => console.error('Error:', error));
+        }
+
+        function deleteUser(userNo) {
+            const confirmation = confirm('정말 삭제하시겠습니까?');
+            if (confirmation) {
+                fetch(`/admin/deleteUser?userNo=${userNo}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        alert('회원이 삭제되었습니다.');
+                        getAllUsers(); // 삭제 후 목록 갱신
+                    } else {
+                        alert('회원 삭제에 실패했습니다.');
+                    }
+                }).catch(error => console.error('Error:', error));
             }
-
-            fetch('/mypage/updatePassword', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    password: password
-                })
-            }).then(response => response.text())
-              .then(data => alert(data))
-              .catch(error => console.error('Error:', error));
         }
 
-        function updatePhoneNumber() {
-            const phoneNumber = document.querySelector('#phoneNumber').value;
 
-            fetch('/mypage/updatePhoneNumber', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    phoneNumber: phoneNumber
-                })
-            }).then(response => response.text())
-              .then(data => alert(data))
-              .catch(error => console.error('Error:', error));
+
+
+
+
+        function clearFields() {
+            document.querySelector('#userNo').value = '';
+            document.querySelector('#userId').value = '';
+            document.querySelector('#userName').value = '';
+            document.querySelector('#userEmail').value = '';
+            document.querySelector('#userPhoneNumber').value = '';
+            document.querySelector('#userRole').value = '';
+            document.querySelector('#userCreatedAt').value = '';
         }
 
-         function updateComplete() {
-            updatePassword();
-            updatePhoneNumber();
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            clearFields();
+        });
+
+
     </script>
 
 </head>
@@ -239,12 +329,14 @@
             <a href="/music/music-recommend" style="text-decoration: none; color: black;">오늘 뭐 듣지?</a>
         </div>
 
-        <div class="navbar-item bold">
+        <div class="navbar-item ">
             <a href="/mypage/mypage" style="text-decoration: none; color: black;">마이페이지</a>
         </div>
-        <div class="navbar-item" th:if="${user.id == 'admin'}">
+
+        <div class="navbar-item bold" th:if="${user.id == 'admin'}">
             <a href="/admin/user-management" style="text-decoration: none; color: black;">회원관리</a>
-        </div>    </div>
+        </div>
+    </div>
 
     <div class="user-info">
         <span th:text="${user.id} + ' 님'">user 님</span>
@@ -255,43 +347,26 @@
     <div class="logout" onclick="logout()">Logout</div>
 
     <div class="content-container">
-        <div class="section-title">내 정보</div>
-        <div class="form-field">
-            <div class="input-label">아이디</div>
-            <input type="text" class="input-field" th:value="${user.id}" readonly>
-        </div>
-        <div class="form-field">
-            <div class="input-label">비밀번호</div>
-            <input type="password" id="password" class="input-field">
-        </div>
 
-        <div class="form-field">
-            <div class="input-label">비밀번호 확인</div>
-            <input type="password" id="passwordConfirm" class="input-field">
-        </div>
+        <button class="action-button" onclick="getAllUsers()">회원 전체 조회</button>
+        <table id="userTable" border="1">
+            <thead>
+            <tr>
+                <th>회원번호</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>전화번호</th>
+                <th>ROLE</th>
+                <th>가입날짜</th>
+                <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 사용자 정보가 여기에 추가됩니다 -->
+            </tbody>
+        </table>
 
-        <div class="action-button" onclick="updatePassword()">
-            <div class="action-button-text">비밀번호 수정</div>
-        </div>
-
-        <div class="form-field">
-            <div class="input-label">이름</div>
-            <input type="text" class="input-field" th:value="${user.name}" readonly>
-        </div>
-        <div class="form-field">
-            <div class="input-label">이메일</div>
-            <input type="email" class="input-field" th:value="${user.email}" readonly>
-        </div>
-        <div class="form-field">
-            <div class="input-label">전화번호</div>
-            <input type="tel" id="phoneNumber" class="input-field" th:value="${user.phoneNumber}">
-        </div>
-        <div class="action-button" onclick="updatePhoneNumber()">
-            <div class="action-button-text">전화번호 수정</div>
-        </div>
-        <div class="action-button" style="bottom: 20px; left: 50%; transform: translateX(-50%); position: absolute;" onclick="updateComplete()">
-            <div class="action-button-text">수정 완료</div>
-        </div>
     </div>
 </div>
 
